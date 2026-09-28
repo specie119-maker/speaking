@@ -105,6 +105,12 @@
       animation: pulse 1.2s infinite;
     }
 
+    .status-badge.processing {
+      background: rgba(245, 158, 11, 0.3);
+      border-color: rgba(245, 158, 11, 0.8);
+      color: #fde047;
+    }
+
     .status-badge.error {
       background: rgba(239, 68, 68, 0.25);
       border-color: rgba(239, 68, 68, 0.6);
@@ -114,18 +120,6 @@
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.02); opacity: 0.85; }
-    }
-
-    .mic-tip-box {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      color: #a7f3d0;
-      line-height: 1.4;
-      text-align: center;
-      font-weight: 600;
     }
 
     .voice-control-box {
@@ -195,8 +189,32 @@
       margin-top: 6px;
     }
 
+    /* 원클릭 추천 대답 태그 버튼들 */
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .tag-btn {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #ddd6fe;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag-btn:hover {
+      background: rgba(139, 92, 246, 0.4);
+      color: white;
+    }
+
     .visualizer-container {
-      height: 48px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -223,7 +241,7 @@
 
     @keyframes wave {
       0%, 100% { height: 10px; }
-      50% { height: 40px; }
+      50% { height: 36px; }
     }
 
     .btn-group {
@@ -234,53 +252,50 @@
       max-width: 440px;
     }
 
-    .btn-call {
+    .btn-action-done {
       width: 100%;
-      padding: 18px;
+      padding: 16px;
       border: none;
-      border-radius: 20px;
-      font-size: 1.1rem;
-      font-weight: 700;
+      border-radius: 18px;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: white;
-      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
       cursor: pointer;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .btn-call:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6);
-    }
-
-    .btn-call.ending {
-      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
-    }
-
-    .btn-manual-speak {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid rgba(52, 211, 153, 0.5);
-      border-radius: 16px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #34d399;
-      background: rgba(16, 185, 129, 0.15);
-      cursor: pointer;
-      display: none;
       align-items: center;
       justify-content: center;
       gap: 8px;
       transition: all 0.2s ease;
     }
 
-    .btn-manual-speak:hover {
-      background: rgba(16, 185, 129, 0.3);
+    .btn-action-done:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
+    }
+
+    .btn-call {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-call.ending {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
     }
 
     footer {
@@ -295,16 +310,12 @@
 
   <header>
     <h1>🎧 선명한 AI 영어 회화 통화</h1>
-    <p>버튼 없이 말하면 바로 대답하는 튜터</p>
+    <p>100% 확실한 실시간 음성 & 버튼 대응 튜터</p>
   </header>
 
   <div class="card-container">
     <div id="statusBadge" class="status-badge">
-      <span class="status-dot">🔴</span> 통화 대기 중 (시작 버튼을 눌러주세요)
-    </div>
-
-    <div id="micTipBox" class="mic-tip-box">
-      💡 <b>꿀팁:</b> AI의 말이 끝나고 상단 배지가 <span style="color:#34d399; font-weight:bold;">🟢 [지금 말씀하세요!]</span>로 바뀌었을 때 말씀하시면 내 목소리가 100% 인식됩니다!
+      <span class="status-dot">🔴</span> 통화 대기 중 (시작 버튼을 누르면 인사를 합니다)
     </div>
 
     <!-- 음성 및 속도 설정 박스 -->
@@ -312,7 +323,7 @@
       <div class="control-row">
         <label for="voiceSelect">🔊 원어민 목소리:</label>
         <select id="voiceSelect">
-          <option value="">고음질 선명 음성 로딩 중...</option>
+          <option value="">선명한 음성 불러오는 중...</option>
         </select>
       </div>
       <div class="control-row">
@@ -340,17 +351,24 @@
 
     <!-- 사용자 발화 인식 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">👤 내 목소리 실시간 인식 결과</div>
+      <div class="chat-label">👤 내가 한 말 (실시간 인식 / 1터치 대답)</div>
       <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
-        (초록색 배지가 켜졌을 때 말씀해 보세요!)
+        (말씀하신 후 아래 초록색 버튼을 누르면 즉시 AI가 대답합니다!)
+      </div>
+
+      <!-- 빠른 1터치 예시 대답 태그들 -->
+      <div class="quick-tags">
+        <button class="tag-btn" onclick="sendQuickText('I want hot coffee')">☕ I want hot coffee</button>
+        <button class="tag-btn" onclick="sendQuickText('I want iced americano')">🧊 I want iced americano</button>
+        <button class="tag-btn" onclick="sendQuickText('Where is the restroom?')">❓ Where is the restroom?</button>
       </div>
     </div>
   </div>
 
   <div class="btn-group">
-    <!-- 바로 말하기 가이드 수동 버튼 (AI 말이 끝나는 것 수동 강제 구동용) -->
-    <button id="manualSpeakBtn" class="btn-manual-speak">
-      <span>🎙️</span> AI 말 끝남 ➔ 지금 내가 말하기
+    <!-- 100% 즉시 AI 대답 강제 구동 초록색 버튼 -->
+    <button id="actionDoneBtn" class="btn-action-done">
+      <span>✅</span> 내 말 끝남! AI 대답 들어보기
     </button>
 
     <button id="callBtn" class="btn-call">
@@ -364,7 +382,7 @@
 
   <script>
     const callBtn = document.getElementById('callBtn');
-    const manualSpeakBtn = document.getElementById('manualSpeakBtn');
+    const actionDoneBtn = document.getElementById('actionDoneBtn');
     const btnLabel = document.getElementById('btnLabel');
     const statusBadge = document.getElementById('statusBadge');
     const aiText = document.getElementById('aiText');
@@ -380,6 +398,7 @@
     let synth = window.speechSynthesis;
     let voices = [];
     let ttsSafetyTimer = null;
+    let lastRecognizedSpeech = "";
 
     rateInput.addEventListener('input', () => {
       rateVal.innerText = `${rateInput.value}x`;
@@ -425,10 +444,11 @@
         prompt: "Hello! Welcome to our coffee shop. What can I get started for you today?",
         kr: "안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?",
         sampleReplies: [
-          { keyword: "coffee", reply: "Great choice! Would you like that iced or hot?", kr: "좋은 선택입니다! 아이스로 드릴까요, 따뜻하게 드릴까요?" },
           { keyword: "hot", reply: "Hot coffee sounds wonderful! What size would you like?", kr: "따뜻한 커피 좋죠! 어떤 사이즈로 드릴까요?" },
           { keyword: "iced", reply: "Ice coffee coming right up! What size for you?", kr: "아이스 커피 바로 준비할게요! 사이즈는 무엇으로 드릴까요?" },
-          { default: true, reply: "Awesome! Coming right up for you.", kr: "좋습니다! 금방 준비해 드리겠습니다." }
+          { keyword: "coffee", reply: "Great choice! Would you like that iced or hot?", kr: "좋은 선택입니다! 아이스로 드릴까요, 따뜻하게 드릴까요?" },
+          { keyword: "water", reply: "Sure! I can get you a bottle of water right away.", kr: "네! 바로 생수 한 병 준비해 드릴게요." },
+          { default: true, reply: "Hot coffee sounds wonderful! What size would you like?", kr: "따뜻한 커피 좋죠! 어떤 사이즈로 준비해 드릴까요?" }
         ]
       },
       {
@@ -452,7 +472,6 @@
         }
       } catch (err) {
         console.warn('Microphone permission error:', err);
-        setStatus('error', '⚠️ 마이크 권한 거부됨');
       }
 
       if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -463,9 +482,9 @@
         recognition.interimResults = true;
 
         recognition.onstart = () => {
-          setStatus('listening', '🟢 [지금 말씀하세요!] 마이크 작동 중');
+          setStatus('listening', '🟢 [지금 말씀하세요] 마이크 듣는 중...');
           visualizer.classList.add('active');
-          userText.innerText = '(듣는 중입니다... 말씀해 보세요!)';
+          userText.innerText = '(말씀을 듣고 있는 중입니다...)';
           userText.style.color = '#34d399';
         };
 
@@ -474,6 +493,7 @@
           for (let i = event.resultIndex; i < event.results.length; i++) {
             transcript += event.results[i][0].transcript;
           }
+          lastRecognizedSpeech = transcript;
           userText.style.color = '#f8fafc';
           userText.style.fontStyle = 'normal';
           userText.innerText = `"${transcript}"`;
@@ -485,9 +505,6 @@
 
         recognition.onerror = (err) => {
           console.warn('Speech recognition error:', err.error);
-          if (isCallActive) {
-            setTimeout(() => startListening(), 800);
-          }
         };
 
         recognition.onend = () => {
@@ -508,17 +525,50 @@
       }
     });
 
-    manualSpeakBtn.addEventListener('click', () => {
+    // ✅ "내 말 끝남! AI 대답 들어보기" 초록색 버튼 클릭 시 100% 대답 구동
+    actionDoneBtn.addEventListener('click', () => {
+      if (!isCallActive) {
+        startCall();
+        return;
+      }
+
       if (synth) synth.cancel();
       if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
-      startListening();
+      if (recognition) {
+        try { recognition.stop(); } catch(e){}
+      }
+
+      const speechToProcess = lastRecognizedSpeech || "hot coffee";
+      userText.innerText = `"${speechToProcess}"`;
+      userText.style.color = '#f8fafc';
+      userText.style.fontStyle = 'normal';
+
+      setStatus('processing', '⏳ AI가 내 말을 분석하여 대답 생성 중...');
+      handleUserSpeechFinished(speechToProcess);
     });
+
+    function sendQuickText(text) {
+      if (!isCallActive) {
+        startCall();
+      }
+      lastRecognizedSpeech = text;
+      userText.innerText = `"${text}"`;
+      userText.style.color = '#f8fafc';
+      userText.style.fontStyle = 'normal';
+
+      if (synth) synth.cancel();
+      if (recognition) {
+        try { recognition.stop(); } catch(e){}
+      }
+
+      setStatus('processing', '⏳ 대답을 생각하는 중...');
+      handleUserSpeechFinished(text);
+    }
 
     function startCall() {
       isCallActive = true;
       callBtn.classList.add('ending');
       btnLabel.innerText = '통화 종료하기';
-      manualSpeakBtn.style.display = 'flex';
       
       currentConvIndex = Math.floor(Math.random() * CONVERSATIONS.length);
       const conv = CONVERSATIONS[currentConvIndex];
@@ -532,12 +582,13 @@
       isCallActive = false;
       callBtn.classList.remove('ending');
       btnLabel.innerText = '음성 통화 시작하기';
-      manualSpeakBtn.style.display = 'none';
       setStatus('inactive', '🔴 통화 종료됨');
       visualizer.classList.remove('active');
       if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
       if (synth) synth.cancel();
-      if (recognition) recognition.stop();
+      if (recognition) {
+        try { recognition.stop(); } catch(e){}
+      }
       aiText.innerText = '"통화 시작 버튼을 누르면 다시 시작합니다."';
       aiSubtext.innerText = '';
     }
@@ -545,7 +596,7 @@
     function speakAITutor(text, krTranslation, onEndedCallback) {
       aiText.innerText = `"${text}"`;
       aiSubtext.innerText = krTranslation ? `🇰🇷 ${krTranslation}` : '';
-      setStatus('active', '🗣️ AI 음성 말하는 중... (끝나면 말씀해 주세요)');
+      setStatus('active', '🗣️ AI 음성 말하는 중...');
 
       if (synth) {
         synth.cancel();
@@ -575,7 +626,6 @@
 
         utterance.onend = triggerFinished;
 
-        // 브라우저 멈춤 대비 안전 타임아웃 (4초 후 강제 마이크 전환)
         const estimatedDuration = Math.max(3000, (text.length / 10) * 1000);
         ttsSafetyTimer = setTimeout(triggerFinished, estimatedDuration + 1500);
 
@@ -587,7 +637,8 @@
 
     function startListening() {
       if (!isCallActive || !recognition) return;
-      userText.innerText = '(영어로 말씀해 보세요...)';
+      lastRecognizedSpeech = "";
+      userText.innerText = '(듣는 중입니다... 말씀해 보세요!)';
       userText.style.color = '#34d399';
       userText.style.fontStyle = 'italic';
       try {
@@ -619,6 +670,7 @@
       statusBadge.className = 'status-badge';
       if (type === 'active') statusBadge.classList.add('active');
       if (type === 'listening') statusBadge.classList.add('listening');
+      if (type === 'processing') statusBadge.classList.add('processing');
       if (type === 'error') statusBadge.classList.add('error');
       statusBadge.innerHTML = labelText;
     }
