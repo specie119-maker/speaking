@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "english": "Can I get an iced coffee, please?",
+    "korean": "아이스 커피 한 잔 주시겠어요?",
+    "tip": "카페에서 주문할 때 무조건 쓰는 표현입니다."
+  },
+  {
+    "id": 2,
+    "english": "Where is the nearest restroom?",
+    "korean": "가장 가까운 화장실이 어디인가요?",
+    "tip": "길 찾을 때 가장 유용한 긴급 문장입니다."
+  },
+  {
+    "id": 3,
+    "english": "Could you say that one more time?",
+    "korean": "한 번만 다시 말씀해 주실래요?",
+    "tip": "상대방 말이 너무 빠를 때 쓰기 좋은 문장입니다."
+  },
+  {
+    "id": 4,
+    "english": "Hey there! Today is a great day to practice speaking. Let's start with 5 minutes of listening and shadowing!",
+    "korean": "안녕하세요! 오늘은 말하기 연습하기 딱 좋은 날이에요. 5분 동안 듣고 섀도잉부터 시작해 볼까요?",
+    "tip": "섀도잉할 때는 소리를 듣자마자 0.5초 차이로 따라 말하는 것이 핵심입니다."
+  },
+  {
+    "id": 5,
+    "english": "I'm working on improving my English fluency. Practice makes perfect!",
+    "korean": "저는 영어 유창성을 키우는 중이에요. 연습이 완벽을 만듭니다!",
+    "tip": "Fluency는 막힘없이 유창하게 말하는 상태를 의미합니다."
+  },
+  {
+    "id": 6,
+    "english": "That's a great point! I completely agree with what you just said.",
+    "korean": "정말 좋은 지적이네요! 방금 하신 말씀에 전적으로 동의합니다.",
+    "tip": "대화 중 상대방 의견에 호응할 때 자주 쓰입니다."
+  },
+  {
+    "id": 7,
+    "english": "Let's call it a day for now and review these sentences before sleeping!",
+    "korean": "오늘은 이쯤에서 마무리하고 잠들기 전에 이 문장들을 복습해 봐요!",
+    "tip": "'Call it a day'는 하루 일과나 작업을 마칠 때 쓰는 전형적인 이디엄입니다."
+  }
+]
