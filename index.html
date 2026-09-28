@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎧 AI 영어 회화 실시간 통화 트레이너 (Whisper STT)</title>
+  <title>🎧 1단계: 왕초보 초단문 영어 회화</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,9 +12,8 @@
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
       --glass-bg: rgba(255, 255, 255, 0.07);
       --glass-border: rgba(255, 255, 255, 0.12);
-      --accent-purple: #8b5cf6;
+      --accent-green: #10b981;
       --accent-pink: #ec4899;
-      --accent-cyan: #06b6d4;
       --text-main: #f8fafc;
       --text-sub: #94a3b8;
     }
@@ -46,15 +45,22 @@
     header h1 {
       font-size: 1.6rem;
       font-weight: 800;
-      background: linear-gradient(90deg, #c084fc, #f472b6, #38bdf8);
+      background: linear-gradient(90deg, #34d399, #c084fc, #f472b6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 4px;
     }
 
-    header p {
+    .level-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 14px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
       font-size: 0.85rem;
-      color: var(--text-sub);
+      font-weight: 700;
+      margin-bottom: 6px;
     }
 
     .card-container {
@@ -70,7 +76,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin: 12px 0;
+      margin: 10px 0;
     }
 
     .status-badge {
@@ -91,17 +97,10 @@
       width: 100%;
     }
 
-    .status-badge.active {
-      background: rgba(59, 130, 246, 0.25);
-      border-color: rgba(59, 130, 246, 0.6);
-      color: #60a5fa;
-    }
-
     .status-badge.recording {
       background: rgba(236, 72, 153, 0.3);
       border-color: rgba(236, 72, 153, 0.8);
       color: #f472b6;
-      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
       animation: pulse 1.2s infinite;
     }
 
@@ -116,12 +115,23 @@
       50% { transform: scale(1.02); opacity: 0.85; }
     }
 
+    .guide-box {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      color: #a7f3d0;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
+    }
+
     .chat-bubble {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px;
       padding: 16px;
-      transition: all 0.3s ease;
     }
 
     .chat-label {
@@ -134,13 +144,14 @@
     }
 
     .chat-text {
-      font-size: 1.1rem;
-      line-height: 1.5;
+      font-size: 1.2rem;
+      line-height: 1.4;
       color: var(--text-main);
+      font-weight: 700;
     }
 
     .chat-subtext {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #a7f3d0;
       margin-top: 6px;
     }
@@ -149,74 +160,37 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .tag-btn {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      color: #ddd6fe;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 0.8rem;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #a7f3d0;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .tag-btn:hover {
-      background: rgba(139, 92, 246, 0.4);
+      background: rgba(16, 185, 129, 0.4);
       color: white;
-    }
-
-    .visualizer-container {
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .wave-bar {
-      width: 6px;
-      height: 10px;
-      background: linear-gradient(180deg, #ec4899, #c084fc);
-      border-radius: 4px;
-      transition: height 0.15s ease;
-    }
-
-    .visualizer-container.active .wave-bar {
-      animation: wave 1s infinite ease-in-out;
-    }
-
-    .visualizer-container.active .wave-bar:nth-child(1) { animation-delay: 0.1s; }
-    .visualizer-container.active .wave-bar:nth-child(2) { animation-delay: 0.3s; }
-    .visualizer-container.active .wave-bar:nth-child(3) { animation-delay: 0.2s; }
-    .visualizer-container.active .wave-bar:nth-child(4) { animation-delay: 0.4s; }
-    .visualizer-container.active .wave-bar:nth-child(5) { animation-delay: 0.15s; }
-
-    @keyframes wave {
-      0%, 100% { height: 10px; }
-      50% { height: 36px; }
-    }
-
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 440px;
     }
 
     .btn-rec {
       width: 100%;
+      max-width: 440px;
       padding: 20px;
       border: none;
       border-radius: 20px;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: white;
-      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -228,7 +202,6 @@
     .btn-rec.recording {
       background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
       box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5);
-      animation: pulse 1.2s infinite;
     }
 
     footer {
@@ -242,55 +215,51 @@
 <body>
 
   <header>
-    <h1>🎧 100% 정확도 AI 영어 회화 트레이너</h1>
-    <p>Whisper AI 엔진 기반 명확한 음성 인식</p>
+    <div class="level-tag">🌱 1단계: 왕초보 초단문 모드 (3~4단어 이내)</div>
+    <h1>🎧 1단계 영어 회화 튜터</h1>
+    <p>아주 쉬운 단문으로 말하고 대답하는 왕초보 과정</p>
   </header>
 
   <div class="card-container">
     <div id="statusBadge" class="status-badge">
-      <span class="status-dot">🔴</span> 녹음 대기 중 (아래 분홍색 버튼을 누르고 말하세요)
+      <span class="status-dot">🔴</span> 1단계 준비 완료! (마이크를 누르고 말해보세요)
     </div>
 
-    <!-- AI 발화 영역 -->
+    <!-- AI 발화 영역 (초단문) -->
     <div class="chat-bubble">
-      <div class="chat-label">🤖 AI Tutor (원어민)</div>
-      <div id="aiText" class="chat-text">"Hello! Welcome to our coffee shop. What can I get started for you today?"</div>
-      <div id="aiSubtext" class="chat-subtext">🇰🇷 안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?</div>
+      <div class="chat-label">🤖 AI 원어민 (1단계 초단문)</div>
+      <div id="aiText" class="chat-text">"Hi! What do you want?"</div>
+      <div id="aiSubtext" class="chat-subtext">🇰🇷 안녕하세요! 무엇을 드릴까요?</div>
     </div>
 
-    <!-- 파형 애니메이션 -->
-    <div id="visualizer" class="visualizer-container">
-      <div class="wave-bar"></div>
-      <div class="wave-bar"></div>
-      <div class="wave-bar"></div>
-      <div class="wave-bar"></div>
-      <div class="wave-bar"></div>
+    <!-- 💡 쉽게 말하기 따라하기 가이드 박스 -->
+    <div id="guideBox" class="guide-box">
+      💡 'Coffee, please' (커피 주세요) 라고 쉽게 말해보세요!
     </div>
 
     <!-- 사용자 발화 인식 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">👤 내 목소리 인식 결과 (Whisper AI)</div>
+      <div class="chat-label">👤 내 말 (Whisper AI)</div>
       <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
-        (버튼을 누르고 "I want hot coffee"라고 말한 뒤 손을 떼세요)
+        (마이크 누르고 위 가이드처럼 단문으로 말씀하세요)
       </div>
 
-      <!-- 빠른 1터치 예시 대답 태그들 -->
+      <!-- 1단계 원터치 추천 단문 버튼 -->
       <div class="quick-tags">
-        <button class="tag-btn" onclick="sendTextDirect('I want hot coffee')">☕ I want hot coffee</button>
-        <button class="tag-btn" onclick="sendTextDirect('I want iced americano')">🧊 I want iced americano</button>
-        <button class="tag-btn" onclick="sendTextDirect('Where is the restroom?')">❓ Where is the restroom?</button>
+        <button class="tag-btn" onclick="sendTextDirect('Coffee, please')">☕ Coffee, please</button>
+        <button class="tag-btn" onclick="sendTextDirect('Hot, please')">🔥 Hot, please</button>
+        <button class="tag-btn" onclick="sendTextDirect('Iced, please')">🧊 Iced, please</button>
+        <button class="tag-btn" onclick="sendTextDirect('Large, please')">🥤 Large, please</button>
+        <button class="tag-btn" onclick="sendTextDirect('Thank you!')">🙏 Thank you!</button>
       </div>
     </div>
   </div>
 
-  <div class="btn-group">
-    <!-- 🎤 누르고 말하기 / 손떼면 완료 100% 인식 버튼 -->
-    <button id="recBtn" class="btn-rec">
-      <span>🎤</span> <span id="recLabel">마이크 누르고 영어로 말하기</span>
-    </button>
-  </div>
+  <button id="recBtn" class="btn-rec">
+    <span>🎤</span> <span id="recLabel">마이크 누르고 영어로 말하기</span>
+  </button>
 
-  <footer style="margin-top:12px;">
+  <footer>
     <p>Powered by OpenAI Whisper STT & Edge Neural TTS</p>
   </footer>
 
@@ -300,8 +269,8 @@
     const statusBadge = document.getElementById('statusBadge');
     const aiText = document.getElementById('aiText');
     const aiSubtext = document.getElementById('aiSubtext');
+    const guideBox = document.getElementById('guideBox');
     const userText = document.getElementById('userText');
-    const visualizer = document.getElementById('visualizer');
 
     let mediaRecorder = null;
     let audioChunks = [];
@@ -322,9 +291,7 @@
         audioChunks = [];
 
         mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) {
-            audioChunks.push(e.data);
-          }
+          if (e.data.size > 0) audioChunks.push(e.data);
         };
 
         mediaRecorder.onstop = async () => {
@@ -336,14 +303,11 @@
         isRecording = true;
         recBtn.classList.add('recording');
         recLabel.innerText = '말하는 중... (다 말했으면 탭하세요!)';
-        setStatus('recording', '🎙️ 내 목소리 녹음 중... (영어로 말하세요)');
-        visualizer.classList.add('active');
-        userText.innerText = '(음성을 수신하고 있습니다...)';
+        setStatus('recording', '🎙️ 녹음 중... (가이드대로 단문 말하기)');
+        userText.innerText = '(듣고 있습니다...)';
         userText.style.color = '#f472b6';
-
       } catch (err) {
         alert('마이크 접근 권한이 필요합니다. 주소창의 마이크 허용을 확인해주세요!');
-        console.error('Microphone error:', err);
       }
     }
 
@@ -353,8 +317,7 @@
         isRecording = false;
         recBtn.classList.remove('recording');
         recLabel.innerText = '마이크 누르고 영어로 말하기';
-        setStatus('processing', '⏳ Whisper AI가 내 음성을 정확히 파악 중입니다...');
-        visualizer.classList.remove('active');
+        setStatus('processing', '⏳ Whisper AI가 내 말을 파악 중...');
       }
     }
 
@@ -369,19 +332,13 @@
         if (!response.ok) throw new Error('STT 서버 응답 에러');
 
         const data = await response.json();
-
-        // 1. 인식된 내 말 표시
         userText.style.color = '#f8fafc';
         userText.style.fontStyle = 'normal';
         userText.innerText = `"${data.recognized}"`;
 
-        // 2. AI 대답 표시 및 음성 재생
-        playAIResponse(data.ai_text, data.ai_kr, data.audio_url);
-
+        playAIResponse(data.ai_text, data.ai_kr, data.guide, data.audio_url);
       } catch (err) {
-        console.error('Whisper STT error:', err);
-        // 서버 연결 실패 시 직관적 폴백
-        sendTextDirect("I want hot coffee");
+        sendTextDirect("Coffee, please");
       }
     }
 
@@ -389,37 +346,45 @@
       userText.style.color = '#f8fafc';
       userText.style.fontStyle = 'normal';
       userText.innerText = `"${text}"`;
-      setStatus('processing', '⏳ AI가 대답을 생각하는 중...');
+      setStatus('processing', '⏳ AI 대답 생성 중...');
 
-      // 기본 대답 생성
-      let replyText = "Hot coffee sounds wonderful! What size would you like?";
-      let replyKr = "따뜻한 커피 좋죠! 어떤 사이즈로 준비해 드릴까요?";
-
-      playAIResponse(replyText, replyKr);
+      fetch('/api/stt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'audio/webm' },
+        body: new Blob([text])
+      })
+      .then(r => r.json())
+      .then(data => {
+        playAIResponse(data.ai_text, data.ai_kr, data.guide, data.audio_url);
+      })
+      .catch(() => {
+        playAIResponse("Hot or iced?", "따뜻하게 드릴까요, 차갑게 드릴까요?", "💡 'Hot, please' 라고 말해보세요!");
+      });
     }
 
-    function playAIResponse(text, kr, audioUrl) {
+    function playAIResponse(text, kr, guide, audioUrl) {
       aiText.innerText = `"${text}"`;
       aiSubtext.innerText = kr ? `🇰🇷 ${kr}` : '';
+      if (guide) guideBox.innerText = guide;
+
       setStatus('active', '🗣️ AI 원어민 대답하는 중...');
 
       if (audioUrl) {
         const audio = new Audio(audioUrl + '?t=' + new Date().getTime());
         audio.play();
-        audio.onended = () => setStatus('inactive', '🔴 말하기 준비 완료! (다시 말하려면 마이크를 누르세요)');
+        audio.onended = () => setStatus('inactive', '🔴 준비 완료! (마이크 누르고 따라하세요)');
       } else {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = 0.8;
-        utterance.onend = () => setStatus('inactive', '🔴 말하기 준비 완료! (다시 말하려면 마이크를 누르세요)');
+        utterance.onend = () => setStatus('inactive', '🔴 준비 완료! (마이크 누르고 따라하세요)');
         window.speechSynthesis.speak(utterance);
       }
     }
 
     function setStatus(type, labelText) {
       statusBadge.className = 'status-badge';
-      if (type === 'active') statusBadge.classList.add('active');
       if (type === 'recording') statusBadge.classList.add('recording');
       if (type === 'processing') statusBadge.classList.add('processing');
       statusBadge.innerHTML = labelText;
