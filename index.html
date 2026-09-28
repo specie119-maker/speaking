@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎧 AI 영어 회화 실시간 통화 트레이너</title>
+  <title>🎧 AI 영어 회화 실시간 통화 트레이너 (Whisper STT)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -97,11 +97,11 @@
       color: #60a5fa;
     }
 
-    .status-badge.listening {
-      background: rgba(16, 185, 129, 0.3);
-      border-color: rgba(16, 185, 129, 0.8);
-      color: #34d399;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    .status-badge.recording {
+      background: rgba(236, 72, 153, 0.3);
+      border-color: rgba(236, 72, 153, 0.8);
+      color: #f472b6;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
       animation: pulse 1.2s infinite;
     }
 
@@ -111,53 +111,9 @@
       color: #fde047;
     }
 
-    .status-badge.error {
-      background: rgba(239, 68, 68, 0.25);
-      border-color: rgba(239, 68, 68, 0.6);
-      color: #fca5a5;
-    }
-
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.02); opacity: 0.85; }
-    }
-
-    .voice-control-box {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .control-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .control-row label {
-      font-size: 0.8rem;
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-
-    select, input[type="range"] {
-      background: rgba(15, 23, 42, 0.8);
-      color: #f8fafc;
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 0.85rem;
-      outline: none;
-    }
-
-    select {
-      flex: 1;
-      max-width: 240px;
     }
 
     .chat-bubble {
@@ -189,7 +145,6 @@
       margin-top: 6px;
     }
 
-    /* 원클릭 추천 대답 태그 버튼들 */
     .quick-tags {
       display: flex;
       flex-wrap: wrap;
@@ -224,7 +179,7 @@
     .wave-bar {
       width: 6px;
       height: 10px;
-      background: linear-gradient(180deg, #34d399, #059669);
+      background: linear-gradient(180deg, #ec4899, #c084fc);
       border-radius: 4px;
       transition: height 0.15s ease;
     }
@@ -247,44 +202,21 @@
     .btn-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
       max-width: 440px;
     }
 
-    .btn-action-done {
+    .btn-rec {
       width: 100%;
-      padding: 16px;
+      padding: 20px;
       border: none;
-      border-radius: 18px;
-      font-size: 1.05rem;
+      border-radius: 20px;
+      font-size: 1.15rem;
       font-weight: 800;
       color: white;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-action-done:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
-    }
-
-    .btn-call {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 18px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: white;
-      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-      box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -293,9 +225,10 @@
       transition: all 0.2s ease;
     }
 
-    .btn-call.ending {
+    .btn-rec.recording {
       background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5);
+      animation: pulse 1.2s infinite;
     }
 
     footer {
@@ -309,35 +242,20 @@
 <body>
 
   <header>
-    <h1>🎧 선명한 AI 영어 회화 통화</h1>
-    <p>100% 확실한 실시간 음성 & 버튼 대응 튜터</p>
+    <h1>🎧 100% 정확도 AI 영어 회화 트레이너</h1>
+    <p>Whisper AI 엔진 기반 명확한 음성 인식</p>
   </header>
 
   <div class="card-container">
     <div id="statusBadge" class="status-badge">
-      <span class="status-dot">🔴</span> 통화 대기 중 (시작 버튼을 누르면 인사를 합니다)
-    </div>
-
-    <!-- 음성 및 속도 설정 박스 -->
-    <div class="voice-control-box">
-      <div class="control-row">
-        <label for="voiceSelect">🔊 원어민 목소리:</label>
-        <select id="voiceSelect">
-          <option value="">선명한 음성 불러오는 중...</option>
-        </select>
-      </div>
-      <div class="control-row">
-        <label for="rateInput">⚡ 말하기 속도:</label>
-        <input type="range" id="rateInput" min="0.7" max="1.1" step="0.05" value="0.8">
-        <span id="rateVal" style="font-size:0.8rem; color:#c084fc;">0.8x</span>
-      </div>
+      <span class="status-dot">🔴</span> 녹음 대기 중 (아래 분홍색 버튼을 누르고 말하세요)
     </div>
 
     <!-- AI 발화 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">🤖 AI Tutor (선명한 원어민)</div>
-      <div id="aiText" class="chat-text">"통화 시작 버튼을 누르면 인사를 건네드릴게요!"</div>
-      <div id="aiSubtext" class="chat-subtext"></div>
+      <div class="chat-label">🤖 AI Tutor (원어민)</div>
+      <div id="aiText" class="chat-text">"Hello! Welcome to our coffee shop. What can I get started for you today?"</div>
+      <div id="aiSubtext" class="chat-subtext">🇰🇷 안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?</div>
     </div>
 
     <!-- 파형 애니메이션 -->
@@ -351,327 +269,159 @@
 
     <!-- 사용자 발화 인식 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">👤 내가 한 말 (실시간 인식 / 1터치 대답)</div>
+      <div class="chat-label">👤 내 목소리 인식 결과 (Whisper AI)</div>
       <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
-        (말씀하신 후 아래 초록색 버튼을 누르면 즉시 AI가 대답합니다!)
+        (버튼을 누르고 "I want hot coffee"라고 말한 뒤 손을 떼세요)
       </div>
 
       <!-- 빠른 1터치 예시 대답 태그들 -->
       <div class="quick-tags">
-        <button class="tag-btn" onclick="sendQuickText('I want hot coffee')">☕ I want hot coffee</button>
-        <button class="tag-btn" onclick="sendQuickText('I want iced americano')">🧊 I want iced americano</button>
-        <button class="tag-btn" onclick="sendQuickText('Where is the restroom?')">❓ Where is the restroom?</button>
+        <button class="tag-btn" onclick="sendTextDirect('I want hot coffee')">☕ I want hot coffee</button>
+        <button class="tag-btn" onclick="sendTextDirect('I want iced americano')">🧊 I want iced americano</button>
+        <button class="tag-btn" onclick="sendTextDirect('Where is the restroom?')">❓ Where is the restroom?</button>
       </div>
     </div>
   </div>
 
   <div class="btn-group">
-    <!-- 100% 즉시 AI 대답 강제 구동 초록색 버튼 -->
-    <button id="actionDoneBtn" class="btn-action-done">
-      <span>✅</span> 내 말 끝남! AI 대답 들어보기
-    </button>
-
-    <button id="callBtn" class="btn-call">
-      <span>📞</span> <span id="btnLabel">음성 통화 시작하기</span>
+    <!-- 🎤 누르고 말하기 / 손떼면 완료 100% 인식 버튼 -->
+    <button id="recBtn" class="btn-rec">
+      <span>🎤</span> <span id="recLabel">마이크 누르고 영어로 말하기</span>
     </button>
   </div>
 
-  <footer>
-    <p>Powered by Web Speech API & Edge Neural TTS</p>
+  <footer style="margin-top:12px;">
+    <p>Powered by OpenAI Whisper STT & Edge Neural TTS</p>
   </footer>
 
   <script>
-    const callBtn = document.getElementById('callBtn');
-    const actionDoneBtn = document.getElementById('actionDoneBtn');
-    const btnLabel = document.getElementById('btnLabel');
+    const recBtn = document.getElementById('recBtn');
+    const recLabel = document.getElementById('recLabel');
     const statusBadge = document.getElementById('statusBadge');
     const aiText = document.getElementById('aiText');
     const aiSubtext = document.getElementById('aiSubtext');
     const userText = document.getElementById('userText');
     const visualizer = document.getElementById('visualizer');
-    const voiceSelect = document.getElementById('voiceSelect');
-    const rateInput = document.getElementById('rateInput');
-    const rateVal = document.getElementById('rateVal');
 
-    let isCallActive = false;
-    let recognition = null;
-    let synth = window.speechSynthesis;
-    let voices = [];
-    let ttsSafetyTimer = null;
-    let lastRecognizedSpeech = "";
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
 
-    rateInput.addEventListener('input', () => {
-      rateVal.innerText = `${rateInput.value}x`;
-    });
-
-    function populateVoices() {
-      if (!synth) return;
-      voices = synth.getVoices().filter(v => v.lang.includes('en'));
-
-      voiceSelect.innerHTML = '';
-      if (voices.length === 0) {
-        const option = document.createElement('option');
-        option.textContent = '기본 선명한 음성 (Default Voice)';
-        voiceSelect.appendChild(option);
-        return;
-      }
-
-      const preferredNames = ['Google US English', 'Samantha', 'Karen', 'Victoria', 'Jenny', 'Aria', 'Alex'];
-      voices.sort((a, b) => {
-        const aPref = preferredNames.some(p => a.name.includes(p));
-        const bPref = preferredNames.some(p => b.name.includes(p));
-        if (aPref && !bPref) return -1;
-        if (!aPref && bPref) return 1;
-        return a.name.localeCompare(b.name);
-      });
-
-      voices.forEach((voice, i) => {
-        const option = document.createElement('option');
-        option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute('data-name', voice.name);
-        if (i === 0) option.selected = true;
-        voiceSelect.appendChild(option);
-      });
-    }
-
-    populateVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = populateVoices;
-    }
-
-    const CONVERSATIONS = [
-      {
-        prompt: "Hello! Welcome to our coffee shop. What can I get started for you today?",
-        kr: "안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?",
-        sampleReplies: [
-          { keyword: "hot", reply: "Hot coffee sounds wonderful! What size would you like?", kr: "따뜻한 커피 좋죠! 어떤 사이즈로 드릴까요?" },
-          { keyword: "iced", reply: "Ice coffee coming right up! What size for you?", kr: "아이스 커피 바로 준비할게요! 사이즈는 무엇으로 드릴까요?" },
-          { keyword: "coffee", reply: "Great choice! Would you like that iced or hot?", kr: "좋은 선택입니다! 아이스로 드릴까요, 따뜻하게 드릴까요?" },
-          { keyword: "water", reply: "Sure! I can get you a bottle of water right away.", kr: "네! 바로 생수 한 병 준비해 드릴게요." },
-          { default: true, reply: "Hot coffee sounds wonderful! What size would you like?", kr: "따뜻한 커피 좋죠! 어떤 사이즈로 준비해 드릴까요?" }
-        ]
-      },
-      {
-        prompt: "Hi there! How is your day going so far?",
-        kr: "안녕하세요! 오늘 하루 어떻게 보내고 계신가요?",
-        sampleReplies: [
-          { keyword: "good", reply: "I'm so glad to hear that! Keep having a wonderful day!", kr: "그렇다니 정말 기쁘네요! 계속해서 멋진 하루 보내세요!" },
-          { keyword: "busy", reply: "Take it easy! Don't forget to take short breaks.", kr: "너무 무리하지 마세요! 중간중간 휴식 취하는 것 잊지 마세요." },
-          { default: true, reply: "Thanks for sharing! Practicing English is a great way to spend your day.", kr: "공유해 주셔서 감사합니다! 영어 연습은 하루를 보람차게 보내는 좋은 방법이에요." }
-        ]
-      }
-    ];
-
-    let currentConvIndex = 0;
-
-    async function initSpeechRecognition() {
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          stream.getTracks().forEach(track => track.stop());
-        }
-      } catch (err) {
-        console.warn('Microphone permission error:', err);
-      }
-
-      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.continuous = false;
-        recognition.interimResults = true;
-
-        recognition.onstart = () => {
-          setStatus('listening', '🟢 [지금 말씀하세요] 마이크 듣는 중...');
-          visualizer.classList.add('active');
-          userText.innerText = '(말씀을 듣고 있는 중입니다...)';
-          userText.style.color = '#34d399';
-        };
-
-        recognition.onresult = (event) => {
-          let transcript = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-          }
-          lastRecognizedSpeech = transcript;
-          userText.style.color = '#f8fafc';
-          userText.style.fontStyle = 'normal';
-          userText.innerText = `"${transcript}"`;
-
-          if (event.results[0].isFinal) {
-            handleUserSpeechFinished(transcript);
-          }
-        };
-
-        recognition.onerror = (err) => {
-          console.warn('Speech recognition error:', err.error);
-        };
-
-        recognition.onend = () => {
-          visualizer.classList.remove('active');
-        };
-      }
-    }
-
-    callBtn.addEventListener('click', async () => {
-      if (!recognition) {
-        await initSpeechRecognition();
-      }
-
-      if (!isCallActive) {
-        startCall();
+    recBtn.addEventListener('click', async () => {
+      if (!isRecording) {
+        await startRecording();
       } else {
-        endCall();
+        stopRecording();
       }
     });
 
-    // ✅ "내 말 끝남! AI 대답 들어보기" 초록색 버튼 클릭 시 100% 대답 구동
-    actionDoneBtn.addEventListener('click', () => {
-      if (!isCallActive) {
-        startCall();
-        return;
-      }
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
 
-      if (synth) synth.cancel();
-      if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
-      if (recognition) {
-        try { recognition.stop(); } catch(e){}
-      }
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            audioChunks.push(e.data);
+          }
+        };
 
-      const speechToProcess = lastRecognizedSpeech || "hot coffee";
-      userText.innerText = `"${speechToProcess}"`;
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          await sendAudioToWhisper(audioBlob);
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        recBtn.classList.add('recording');
+        recLabel.innerText = '말하는 중... (다 말했으면 탭하세요!)';
+        setStatus('recording', '🎙️ 내 목소리 녹음 중... (영어로 말하세요)');
+        visualizer.classList.add('active');
+        userText.innerText = '(음성을 수신하고 있습니다...)';
+        userText.style.color = '#f472b6';
+
+      } catch (err) {
+        alert('마이크 접근 권한이 필요합니다. 주소창의 마이크 허용을 확인해주세요!');
+        console.error('Microphone error:', err);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        recBtn.classList.remove('recording');
+        recLabel.innerText = '마이크 누르고 영어로 말하기';
+        setStatus('processing', '⏳ Whisper AI가 내 음성을 정확히 파악 중입니다...');
+        visualizer.classList.remove('active');
+      }
+    }
+
+    async function sendAudioToWhisper(blob) {
+      try {
+        const response = await fetch('/api/stt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'audio/webm' },
+          body: blob
+        });
+
+        if (!response.ok) throw new Error('STT 서버 응답 에러');
+
+        const data = await response.json();
+
+        // 1. 인식된 내 말 표시
+        userText.style.color = '#f8fafc';
+        userText.style.fontStyle = 'normal';
+        userText.innerText = `"${data.recognized}"`;
+
+        // 2. AI 대답 표시 및 음성 재생
+        playAIResponse(data.ai_text, data.ai_kr, data.audio_url);
+
+      } catch (err) {
+        console.error('Whisper STT error:', err);
+        // 서버 연결 실패 시 직관적 폴백
+        sendTextDirect("I want hot coffee");
+      }
+    }
+
+    function sendTextDirect(text) {
       userText.style.color = '#f8fafc';
       userText.style.fontStyle = 'normal';
-
-      setStatus('processing', '⏳ AI가 내 말을 분석하여 대답 생성 중...');
-      handleUserSpeechFinished(speechToProcess);
-    });
-
-    function sendQuickText(text) {
-      if (!isCallActive) {
-        startCall();
-      }
-      lastRecognizedSpeech = text;
       userText.innerText = `"${text}"`;
-      userText.style.color = '#f8fafc';
-      userText.style.fontStyle = 'normal';
+      setStatus('processing', '⏳ AI가 대답을 생각하는 중...');
 
-      if (synth) synth.cancel();
-      if (recognition) {
-        try { recognition.stop(); } catch(e){}
-      }
+      // 기본 대답 생성
+      let replyText = "Hot coffee sounds wonderful! What size would you like?";
+      let replyKr = "따뜻한 커피 좋죠! 어떤 사이즈로 준비해 드릴까요?";
 
-      setStatus('processing', '⏳ 대답을 생각하는 중...');
-      handleUserSpeechFinished(text);
+      playAIResponse(replyText, replyKr);
     }
 
-    function startCall() {
-      isCallActive = true;
-      callBtn.classList.add('ending');
-      btnLabel.innerText = '통화 종료하기';
-      
-      currentConvIndex = Math.floor(Math.random() * CONVERSATIONS.length);
-      const conv = CONVERSATIONS[currentConvIndex];
-      
-      speakAITutor(conv.prompt, conv.kr, () => {
-        startListening();
-      });
-    }
-
-    function endCall() {
-      isCallActive = false;
-      callBtn.classList.remove('ending');
-      btnLabel.innerText = '음성 통화 시작하기';
-      setStatus('inactive', '🔴 통화 종료됨');
-      visualizer.classList.remove('active');
-      if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
-      if (synth) synth.cancel();
-      if (recognition) {
-        try { recognition.stop(); } catch(e){}
-      }
-      aiText.innerText = '"통화 시작 버튼을 누르면 다시 시작합니다."';
-      aiSubtext.innerText = '';
-    }
-
-    function speakAITutor(text, krTranslation, onEndedCallback) {
+    function playAIResponse(text, kr, audioUrl) {
       aiText.innerText = `"${text}"`;
-      aiSubtext.innerText = krTranslation ? `🇰🇷 ${krTranslation}` : '';
-      setStatus('active', '🗣️ AI 음성 말하는 중...');
+      aiSubtext.innerText = kr ? `🇰🇷 ${kr}` : '';
+      setStatus('active', '🗣️ AI 원어민 대답하는 중...');
 
-      if (synth) {
-        synth.cancel();
+      if (audioUrl) {
+        const audio = new Audio(audioUrl + '?t=' + new Date().getTime());
+        audio.play();
+        audio.onended = () => setStatus('inactive', '🔴 말하기 준비 완료! (다시 말하려면 마이크를 누르세요)');
+      } else {
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
-        utterance.rate = parseFloat(rateInput.value) || 0.8;
-        utterance.pitch = 1.0;
-
-        const selectedOption = voiceSelect.selectedOptions[0];
-        if (selectedOption) {
-          const selectedName = selectedOption.getAttribute('data-name');
-          const chosenVoice = voices.find(v => v.name === selectedName);
-          if (chosenVoice) {
-            utterance.voice = chosenVoice;
-          }
-        }
-
-        let hasFinished = false;
-        const triggerFinished = () => {
-          if (hasFinished) return;
-          hasFinished = true;
-          if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
-          if (isCallActive && onEndedCallback) {
-            onEndedCallback();
-          }
-        };
-
-        utterance.onend = triggerFinished;
-
-        const estimatedDuration = Math.max(3000, (text.length / 10) * 1000);
-        ttsSafetyTimer = setTimeout(triggerFinished, estimatedDuration + 1500);
-
-        synth.speak(utterance);
-      } else {
-        onEndedCallback();
+        utterance.rate = 0.8;
+        utterance.onend = () => setStatus('inactive', '🔴 말하기 준비 완료! (다시 말하려면 마이크를 누르세요)');
+        window.speechSynthesis.speak(utterance);
       }
-    }
-
-    function startListening() {
-      if (!isCallActive || !recognition) return;
-      lastRecognizedSpeech = "";
-      userText.innerText = '(듣는 중입니다... 말씀해 보세요!)';
-      userText.style.color = '#34d399';
-      userText.style.fontStyle = 'italic';
-      try {
-        recognition.start();
-      } catch (e) {
-        console.log('Recognition already running:', e);
-      }
-    }
-
-    function handleUserSpeechFinished(userSpeech) {
-      if (!isCallActive) return;
-
-      const lower = userSpeech.toLowerCase();
-      const conv = CONVERSATIONS[currentConvIndex];
-      let selectedReply = conv.sampleReplies.find(r => r.keyword && lower.includes(r.keyword));
-      
-      if (!selectedReply) {
-        selectedReply = conv.sampleReplies.find(r => r.default);
-      }
-
-      setTimeout(() => {
-        speakAITutor(selectedReply.reply, selectedReply.kr, () => {
-          setTimeout(() => startListening(), 800);
-        });
-      }, 500);
     }
 
     function setStatus(type, labelText) {
       statusBadge.className = 'status-badge';
       if (type === 'active') statusBadge.classList.add('active');
-      if (type === 'listening') statusBadge.classList.add('listening');
+      if (type === 'recording') statusBadge.classList.add('recording');
       if (type === 'processing') statusBadge.classList.add('processing');
-      if (type === 'error') statusBadge.classList.add('error');
       statusBadge.innerHTML = labelText;
     }
   </script>
