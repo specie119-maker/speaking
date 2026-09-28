@@ -112,13 +112,16 @@ async def send_daily_prompt(chat_id: int, app: Application):
     """지정된 사용자에게 텍스트와 음성(TTS) 메시지 전송"""
     item = get_random_or_generated_expression()
     
+    web_url = os.getenv("WEB_APP_URL", "https://specie119-maker.github.io/speaking/")
     text_message = (
         f"🎧 **[오늘의 1분 영어 회화 배달]**\n\n"
         f"🗣 **English:**\n{item['english']}\n\n"
         f"🇰🇷 **한국어:**\n{item['korean']}\n\n"
         f"💡 **학습 팁:** {item.get('tip', '')}\n\n"
-        f"🎙 **[음성 대화 해보기]**\n"
-        f"아래 음성을 듣고, **텔레그램 음성 메시지 버튼(🎤)**을 눌러 직접 영어로 답장해 보세요! 제가 발음을 듣고 답장을 보내드릴게요!"
+        f"📞 **[버튼 누를 필요 없는 전화 통화형 웹앱 열기]**\n"
+        f"👉 [실시간 음성 통화 시작하기]({web_url})\n\n"
+        f"🎙 **[텔레그램에서 바로 답장하기]**\n"
+        f"아래 음성을 듣고, **마이크 버튼(🎤)**을 눌러 음성 메시지를 보내주세요!"
     )
 
     voice_path = f"voice_{chat_id}.mp3"

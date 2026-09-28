@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎧 AI 영어 회화 실시간 통화 트레이너</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      --glass-bg: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --accent-cyan: #06b6d4;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 16px;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #c084fc, #f472b6, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+    }
+
+    /* Main Conversation Card */
+    .card-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .status-badge {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #c084fc;
+      transition: all 0.3s ease;
+    }
+
+    .status-badge.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #34d399;
+    }
+
+    .status-badge.listening {
+      background: rgba(236, 72, 153, 0.2);
+      border-color: rgba(236, 72, 153, 0.5);
+      color: #f472b6;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .chat-bubble {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .chat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .chat-text {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: var(--text-main);
+    }
+
+    .chat-subtext {
+      font-size: 0.85rem;
+      color: #a7f3d0;
+      margin-top: 6px;
+    }
+
+    /* Wave Animation Visualizer */
+    .visualizer-container {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .wave-bar {
+      width: 6px;
+      height: 12px;
+      background: linear-gradient(180deg, #c084fc, #ec4899);
+      border-radius: 4px;
+      transition: height 0.15s ease;
+    }
+
+    .visualizer-container.active .wave-bar {
+      animation: wave 1s infinite ease-in-out;
+    }
+
+    .visualizer-container.active .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+    .visualizer-container.active .wave-bar:nth-child(2) { animation-delay: 0.3s; }
+    .visualizer-container.active .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .visualizer-container.active .wave-bar:nth-child(4) { animation-delay: 0.4s; }
+    .visualizer-container.active .wave-bar:nth-child(5) { animation-delay: 0.15s; }
+
+    @keyframes wave {
+      0%, 100% { height: 12px; }
+      50% { height: 48px; }
+    }
+
+    /* Action Call Button */
+    .btn-call {
+      width: 100%;
+      max-width: 420px;
+      padding: 18px;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-call:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6);
+    }
+
+    .btn-call:active {
+      transform: translateY(1px);
+    }
+
+    .btn-call.ending {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎧 AI 실시간 영어 회화 통화</h1>
+    <p>버튼 누를 필요 없이 진짜 전화처럼 주고받는 회화 튜터</p>
+  </header>
+
+  <div class="card-container">
+    <div id="statusBadge" class="status-badge">
+      <span class="status-dot">🔴</span> 통화 대기 중
+    </div>
+
+    <!-- AI 발화 영역 -->
+    <div class="chat-bubble">
+      <div class="chat-label">🤖 AI Tutor (원어민)</div>
+      <div id="aiText" class="chat-text">"통화 시작 버튼을 누르면 인사를 건네드릴게요!"</div>
+      <div id="aiSubtext" class="chat-subtext"></div>
+    </div>
+
+    <!-- 파형 애니메이션 -->
+    <div id="visualizer" class="visualizer-container">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+
+    <!-- 사용자 발화 인식 영역 -->
+    <div class="chat-bubble">
+      <div class="chat-label">👤 내 목소리 인식 결과</div>
+      <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
+        (말을 건네면 여기에 인식된 텍스트가 나옵니다)
+      </div>
+    </div>
+  </div>
+
+  <button id="callBtn" class="btn-call">
+    <span>📞</span> <span id="btnLabel">음성 통화 시작하기</span>
+  </button>
+
+  <footer>
+    <p>Powered by Web Speech API & Edge Neural TTS</p>
+  </footer>
+
+  <script>
+    const callBtn = document.getElementById('callBtn');
+    const btnLabel = document.getElementById('btnLabel');
+    const statusBadge = document.getElementById('statusBadge');
+    const aiText = document.getElementById('aiText');
+    const aiSubtext = document.getElementById('aiSubtext');
+    const userText = document.getElementById('userText');
+    const visualizer = document.getElementById('visualizer');
+
+    let isCallActive = false;
+    let recognition = null;
+    let synth = window.speechSynthesis;
+
+    // 회화 시나리오 문장 데이터베이스
+    const CONVERSATIONS = [
+      {
+        prompt: "Hello! Welcome to our coffee shop. What can I get started for you today?",
+        kr: "안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?",
+        sampleReplies: [
+          { keyword: "coffee", reply: "Great choice! Would you like that iced or hot?", kr: "좋은 선택입니다! 아이스로 드릴까요, 따뜻하게 드릴까요?" },
+          { keyword: "water", reply: "Sure! I can get you a bottle of water right away.", kr: "네! 바로 생수 한 병 준비해 드릴게요." },
+          { default: true, reply: "Awesome! Coming right up for you.", kr: "좋습니다! 금방 준비해 드리겠습니다." }
+        ]
+      },
+      {
+        prompt: "Hi there! How is your day going so far?",
+        kr: "안녕하세요! 오늘 하루 어떻게 보내고 계신가요?",
+        sampleReplies: [
+          { keyword: "good", reply: "I'm so glad to hear that! Keep having a wonderful day!", kr: "그렇다니 정말 기쁘네요! 계속해서 멋진 하루 보내세요!" },
+          { keyword: "busy", reply: "Take it easy! Don't forget to take short breaks.", kr: "너무 무리하지 마세요! 중간중간 휴식 취하는 것 잊지 마세요." },
+          { default: true, reply: "Thanks for sharing! Practicing English is a great way to spend your day.", kr: "공유해 주셔서 감사합니다! 영어 연습은 하루를 보람차게 보내는 좋은 방법이에요." }
+        ]
+      }
+    ];
+
+    let currentConvIndex = 0;
+
+    // 음성 인식 초기화
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setStatus('listening', '🎙️ 내 목소리 듣는 중...');
+        visualizer.classList.add('active');
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        userText.style.color = '#f8fafc';
+        userText.style.fontStyle = 'normal';
+        userText.innerText = `"${transcript}"`;
+
+        if (event.results[0].isFinal) {
+          handleUserSpeechFinished(transcript);
+        }
+      };
+
+      recognition.onerror = (err) => {
+        console.warn('Speech recognition error:', err);
+        if (isCallActive) {
+          setTimeout(() => startListening(), 1000);
+        }
+      };
+
+      recognition.onend = () => {
+        visualizer.classList.remove('active');
+      };
+    } else {
+      alert('이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저 사용을 권장합니다.');
+    }
+
+    // 통화 시작 / 종료 버튼 이벤트
+    callBtn.addEventListener('click', () => {
+      if (!isCallActive) {
+        startCall();
+      } else {
+        endCall();
+      }
+    });
+
+    function startCall() {
+      isCallActive = true;
+      callBtn.classList.add('ending');
+      btnLabel.innerText = '통화 종료하기';
+      
+      currentConvIndex = Math.floor(Math.random() * CONVERSATIONS.length);
+      const conv = CONVERSATIONS[currentConvIndex];
+      
+      speakAITutor(conv.prompt, conv.kr, () => {
+        startListening();
+      });
+    }
+
+    function endCall() {
+      isCallActive = false;
+      callBtn.classList.remove('ending');
+      btnLabel.innerText = '음성 통화 시작하기';
+      setStatus('inactive', '🔴 통화 종료됨');
+      visualizer.classList.remove('active');
+      if (synth) synth.cancel();
+      if (recognition) recognition.stop();
+      aiText.innerText = '"통화 시작 버튼을 누르면 다시 시작합니다."';
+      aiSubtext.innerText = '';
+    }
+
+    function speakAITutor(text, krTranslation, onEndedCallback) {
+      aiText.innerText = `"${text}"`;
+      aiSubtext.innerText = krTranslation ? `🇰🇷 ${krTranslation}` : '';
+      setStatus('active', '🗣️ AI 음성 말하는 중...');
+
+      if (synth) {
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+
+        utterance.onend = () => {
+          if (isCallActive && onEndedCallback) {
+            onEndedCallback();
+          }
+        };
+
+        synth.speak(utterance);
+      }
+    }
+
+    function startListening() {
+      if (!isCallActive || !recognition) return;
+      userText.innerText = '(영어로 말씀해 보세요...)';
+      userText.style.color = '#94a3b8';
+      userText.style.fontStyle = 'italic';
+      try {
+        recognition.start();
+      } catch (e) {
+        console.log('Recognition already started:', e);
+      }
+    }
+
+    function handleUserSpeechFinished(userSpeech) {
+      if (!isCallActive) return;
+
+      const lower = userSpeech.toLowerCase();
+      const conv = CONVERSATIONS[currentConvIndex];
+      let selectedReply = conv.sampleReplies.find(r => r.keyword && lower.includes(r.keyword));
+      
+      if (!selectedReply) {
+        selectedReply = conv.sampleReplies.find(r => r.default);
+      }
+
+      setTimeout(() => {
+        speakAITutor(selectedReply.reply, selectedReply.kr, () => {
+          // 연속 통화 루프
+          setTimeout(() => startListening(), 800);
+        });
+      }, 500);
+    }
+
+    function setStatus(type, labelText) {
+      statusBadge.className = 'status-badge';
+      if (type === 'active') statusBadge.classList.add('active');
+      if (type === 'listening') statusBadge.classList.add('listening');
+      statusBadge.innerHTML = labelText;
+    }
+  </script>
+</body>
+</html>
