@@ -34,13 +34,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 16px;
+      padding: 20px 16px;
       overflow-x: hidden;
     }
 
     header {
       text-align: center;
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     header h1 {
@@ -49,7 +49,7 @@
       background: linear-gradient(90deg, #c084fc, #f472b6, #38bdf8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     header p {
@@ -65,41 +65,44 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
-      padding: 24px;
+      padding: 20px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      margin: 16px 0;
+      gap: 14px;
+      margin: 12px 0;
     }
 
     .status-badge {
       align-self: center;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 6px 16px;
+      padding: 10px 20px;
       border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       background: rgba(139, 92, 246, 0.2);
       border: 1px solid rgba(139, 92, 246, 0.4);
       color: #c084fc;
       transition: all 0.3s ease;
       text-align: center;
+      width: 100%;
     }
 
     .status-badge.active {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: rgba(16, 185, 129, 0.5);
-      color: #34d399;
+      background: rgba(59, 130, 246, 0.25);
+      border-color: rgba(59, 130, 246, 0.6);
+      color: #60a5fa;
     }
 
     .status-badge.listening {
-      background: rgba(236, 72, 153, 0.25);
-      border-color: rgba(236, 72, 153, 0.6);
-      color: #f472b6;
-      animation: pulse 1.5s infinite;
+      background: rgba(16, 185, 129, 0.3);
+      border-color: rgba(16, 185, 129, 0.8);
+      color: #34d399;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      animation: pulse 1.2s infinite;
     }
 
     .status-badge.error {
@@ -109,22 +112,20 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.02); opacity: 0.85; }
     }
 
-    /* Mic Alert Banner */
-    .mic-alert {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
+    .mic-tip-box {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
       border-radius: 12px;
       padding: 10px 14px;
-      font-size: 0.8rem;
-      color: #fde047;
+      font-size: 0.82rem;
+      color: #a7f3d0;
       line-height: 1.4;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      text-align: center;
+      font-weight: 600;
     }
 
     .voice-control-box {
@@ -205,7 +206,7 @@
     .wave-bar {
       width: 6px;
       height: 10px;
-      background: linear-gradient(180deg, #c084fc, #ec4899);
+      background: linear-gradient(180deg, #34d399, #059669);
       border-radius: 4px;
       transition: height 0.15s ease;
     }
@@ -225,9 +226,16 @@
       50% { height: 40px; }
     }
 
-    .btn-call {
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       width: 100%;
       max-width: 440px;
+    }
+
+    .btn-call {
+      width: 100%;
       padding: 18px;
       border: none;
       border-radius: 20px;
@@ -254,6 +262,27 @@
       box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
     }
 
+    .btn-manual-speak {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid rgba(52, 211, 153, 0.5);
+      border-radius: 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-manual-speak:hover {
+      background: rgba(16, 185, 129, 0.3);
+    }
+
     footer {
       text-align: center;
       font-size: 0.8rem;
@@ -270,14 +299,12 @@
   </header>
 
   <div class="card-container">
-    <!-- 마이크 권한 안내 팝업 경고 -->
-    <div id="micAlert" class="mic-alert">
-      <span>💡</span>
-      <span>브라우저 팝업이 뜨면 <b>'마이크 허용'</b>을 눌러주세요! (마이크 권한이 있어야 내 목소리가 인식됩니다)</span>
+    <div id="statusBadge" class="status-badge">
+      <span class="status-dot">🔴</span> 통화 대기 중 (시작 버튼을 눌러주세요)
     </div>
 
-    <div id="statusBadge" class="status-badge">
-      <span class="status-dot">🔴</span> 통화 대기 중
+    <div id="micTipBox" class="mic-tip-box">
+      💡 <b>꿀팁:</b> AI의 말이 끝나고 상단 배지가 <span style="color:#34d399; font-weight:bold;">🟢 [지금 말씀하세요!]</span>로 바뀌었을 때 말씀하시면 내 목소리가 100% 인식됩니다!
     </div>
 
     <!-- 음성 및 속도 설정 박스 -->
@@ -290,8 +317,8 @@
       </div>
       <div class="control-row">
         <label for="rateInput">⚡ 말하기 속도:</label>
-        <input type="range" id="rateInput" min="0.7" max="1.1" step="0.05" value="0.95">
-        <span id="rateVal" style="font-size:0.8rem; color:#c084fc;">0.95x</span>
+        <input type="range" id="rateInput" min="0.7" max="1.1" step="0.05" value="0.8">
+        <span id="rateVal" style="font-size:0.8rem; color:#c084fc;">0.8x</span>
       </div>
     </div>
 
@@ -315,14 +342,21 @@
     <div class="chat-bubble">
       <div class="chat-label">👤 내 목소리 실시간 인식 결과</div>
       <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
-        (말을 건네면 여기에 실시간으로 내가 한 말이 나옵니다)
+        (초록색 배지가 켜졌을 때 말씀해 보세요!)
       </div>
     </div>
   </div>
 
-  <button id="callBtn" class="btn-call">
-    <span>📞</span> <span id="btnLabel">음성 통화 시작하기</span>
-  </button>
+  <div class="btn-group">
+    <!-- 바로 말하기 가이드 수동 버튼 (AI 말이 끝나는 것 수동 강제 구동용) -->
+    <button id="manualSpeakBtn" class="btn-manual-speak">
+      <span>🎙️</span> AI 말 끝남 ➔ 지금 내가 말하기
+    </button>
+
+    <button id="callBtn" class="btn-call">
+      <span>📞</span> <span id="btnLabel">음성 통화 시작하기</span>
+    </button>
+  </div>
 
   <footer>
     <p>Powered by Web Speech API & Edge Neural TTS</p>
@@ -330,6 +364,7 @@
 
   <script>
     const callBtn = document.getElementById('callBtn');
+    const manualSpeakBtn = document.getElementById('manualSpeakBtn');
     const btnLabel = document.getElementById('btnLabel');
     const statusBadge = document.getElementById('statusBadge');
     const aiText = document.getElementById('aiText');
@@ -339,12 +374,12 @@
     const voiceSelect = document.getElementById('voiceSelect');
     const rateInput = document.getElementById('rateInput');
     const rateVal = document.getElementById('rateVal');
-    const micAlert = document.getElementById('micAlert');
 
     let isCallActive = false;
     let recognition = null;
     let synth = window.speechSynthesis;
     let voices = [];
+    let ttsSafetyTimer = null;
 
     rateInput.addEventListener('input', () => {
       rateVal.innerText = `${rateInput.value}x`;
@@ -391,7 +426,8 @@
         kr: "안녕하세요! 커피숍에 오신 것을 환영합니다. 무엇을 주문하시겠어요?",
         sampleReplies: [
           { keyword: "coffee", reply: "Great choice! Would you like that iced or hot?", kr: "좋은 선택입니다! 아이스로 드릴까요, 따뜻하게 드릴까요?" },
-          { keyword: "water", reply: "Sure! I can get you a bottle of water right away.", kr: "네! 바로 생수 한 병 준비해 드릴게요." },
+          { keyword: "hot", reply: "Hot coffee sounds wonderful! What size would you like?", kr: "따뜻한 커피 좋죠! 어떤 사이즈로 드릴까요?" },
+          { keyword: "iced", reply: "Ice coffee coming right up! What size for you?", kr: "아이스 커피 바로 준비할게요! 사이즈는 무엇으로 드릴까요?" },
           { default: true, reply: "Awesome! Coming right up for you.", kr: "좋습니다! 금방 준비해 드리겠습니다." }
         ]
       },
@@ -408,20 +444,15 @@
 
     let currentConvIndex = 0;
 
-    // 음성 인식 초기화 및 권한 허용 요청
     async function initSpeechRecognition() {
-      // 1. 먼저 마이크 미디어 권한을 명시적으로 요청
       try {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          // 권한 확보 완료 후 트랙 종료
           stream.getTracks().forEach(track => track.stop());
-          micAlert.style.display = 'none';
         }
       } catch (err) {
         console.warn('Microphone permission error:', err);
-        setStatus('error', '⚠️ 마이크 권한이 차단되었습니다! 주소창 옆 🔒 마이크 허용을 눌러주세요.');
-        userText.innerHTML = '<b style="color:#ef4444;">⚠️ 마이크 권한 필요:</b> 브라우저 주소창 왼쪽의 🔒 자물쇠 아이콘을 눌러 [마이크 허용]으로 설정해 주세요!';
+        setStatus('error', '⚠️ 마이크 권한 거부됨');
       }
 
       if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -432,8 +463,10 @@
         recognition.interimResults = true;
 
         recognition.onstart = () => {
-          setStatus('listening', '🎙️ 내 목소리 듣는 중... (말해보세요!)');
+          setStatus('listening', '🟢 [지금 말씀하세요!] 마이크 작동 중');
           visualizer.classList.add('active');
+          userText.innerText = '(듣는 중입니다... 말씀해 보세요!)';
+          userText.style.color = '#34d399';
         };
 
         recognition.onresult = (event) => {
@@ -452,11 +485,8 @@
 
         recognition.onerror = (err) => {
           console.warn('Speech recognition error:', err.error);
-          if (err.error === 'not-allowed' || err.error === 'service-not-allowed') {
-            setStatus('error', '⚠️ 마이크 거부됨 (주소창 🔒 클릭 후 허용 필요)');
-            userText.innerText = '⚠️ 마이크 권한이 거부되었습니다. 주소창 자물쇠 버튼을 눌러 마이크를 허용해 주세요.';
-          } else if (isCallActive) {
-            setTimeout(() => startListening(), 1000);
+          if (isCallActive) {
+            setTimeout(() => startListening(), 800);
           }
         };
 
@@ -466,7 +496,6 @@
       }
     }
 
-    // 통화 버튼 누를 때 초기화 및 통화 실행
     callBtn.addEventListener('click', async () => {
       if (!recognition) {
         await initSpeechRecognition();
@@ -479,10 +508,17 @@
       }
     });
 
+    manualSpeakBtn.addEventListener('click', () => {
+      if (synth) synth.cancel();
+      if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
+      startListening();
+    });
+
     function startCall() {
       isCallActive = true;
       callBtn.classList.add('ending');
       btnLabel.innerText = '통화 종료하기';
+      manualSpeakBtn.style.display = 'flex';
       
       currentConvIndex = Math.floor(Math.random() * CONVERSATIONS.length);
       const conv = CONVERSATIONS[currentConvIndex];
@@ -496,8 +532,10 @@
       isCallActive = false;
       callBtn.classList.remove('ending');
       btnLabel.innerText = '음성 통화 시작하기';
+      manualSpeakBtn.style.display = 'none';
       setStatus('inactive', '🔴 통화 종료됨');
       visualizer.classList.remove('active');
+      if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
       if (synth) synth.cancel();
       if (recognition) recognition.stop();
       aiText.innerText = '"통화 시작 버튼을 누르면 다시 시작합니다."';
@@ -507,13 +545,13 @@
     function speakAITutor(text, krTranslation, onEndedCallback) {
       aiText.innerText = `"${text}"`;
       aiSubtext.innerText = krTranslation ? `🇰🇷 ${krTranslation}` : '';
-      setStatus('active', '🗣️ AI 음성 말하는 중...');
+      setStatus('active', '🗣️ AI 음성 말하는 중... (끝나면 말씀해 주세요)');
 
       if (synth) {
         synth.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
-        utterance.rate = parseFloat(rateInput.value) || 0.95;
+        utterance.rate = parseFloat(rateInput.value) || 0.8;
         utterance.pitch = 1.0;
 
         const selectedOption = voiceSelect.selectedOptions[0];
@@ -525,25 +563,37 @@
           }
         }
 
-        utterance.onend = () => {
+        let hasFinished = false;
+        const triggerFinished = () => {
+          if (hasFinished) return;
+          hasFinished = true;
+          if (ttsSafetyTimer) clearTimeout(ttsSafetyTimer);
           if (isCallActive && onEndedCallback) {
             onEndedCallback();
           }
         };
 
+        utterance.onend = triggerFinished;
+
+        // 브라우저 멈춤 대비 안전 타임아웃 (4초 후 강제 마이크 전환)
+        const estimatedDuration = Math.max(3000, (text.length / 10) * 1000);
+        ttsSafetyTimer = setTimeout(triggerFinished, estimatedDuration + 1500);
+
         synth.speak(utterance);
+      } else {
+        onEndedCallback();
       }
     }
 
     function startListening() {
       if (!isCallActive || !recognition) return;
       userText.innerText = '(영어로 말씀해 보세요...)';
-      userText.style.color = '#94a3b8';
+      userText.style.color = '#34d399';
       userText.style.fontStyle = 'italic';
       try {
         recognition.start();
       } catch (e) {
-        console.log('Recognition start error:', e);
+        console.log('Recognition already running:', e);
       }
     }
 
