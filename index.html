@@ -86,6 +86,7 @@
       border: 1px solid rgba(139, 92, 246, 0.4);
       color: #c084fc;
       transition: all 0.3s ease;
+      text-align: center;
     }
 
     .status-badge.active {
@@ -95,10 +96,16 @@
     }
 
     .status-badge.listening {
-      background: rgba(236, 72, 153, 0.2);
-      border-color: rgba(236, 72, 153, 0.5);
+      background: rgba(236, 72, 153, 0.25);
+      border-color: rgba(236, 72, 153, 0.6);
       color: #f472b6;
       animation: pulse 1.5s infinite;
+    }
+
+    .status-badge.error {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #fca5a5;
     }
 
     @keyframes pulse {
@@ -106,7 +113,20 @@
       50% { opacity: 0.6; }
     }
 
-    /* Voice Control Box */
+    /* Mic Alert Banner */
+    .mic-alert {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: #fde047;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .voice-control-box {
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -174,7 +194,6 @@
       margin-top: 6px;
     }
 
-    /* Wave Animation */
     .visualizer-container {
       height: 48px;
       display: flex;
@@ -247,10 +266,16 @@
 
   <header>
     <h1>🎧 선명한 AI 영어 회화 통화</h1>
-    <p>맑고 또렷한 고품질 선명 음성 튜터</p>
+    <p>버튼 없이 말하면 바로 대답하는 튜터</p>
   </header>
 
   <div class="card-container">
+    <!-- 마이크 권한 안내 팝업 경고 -->
+    <div id="micAlert" class="mic-alert">
+      <span>💡</span>
+      <span>브라우저 팝업이 뜨면 <b>'마이크 허용'</b>을 눌러주세요! (마이크 권한이 있어야 내 목소리가 인식됩니다)</span>
+    </div>
+
     <div id="statusBadge" class="status-badge">
       <span class="status-dot">🔴</span> 통화 대기 중
     </div>
@@ -272,7 +297,7 @@
 
     <!-- AI 발화 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">🤖 AI Tutor (또렷한 원어민)</div>
+      <div class="chat-label">🤖 AI Tutor (선명한 원어민)</div>
       <div id="aiText" class="chat-text">"통화 시작 버튼을 누르면 인사를 건네드릴게요!"</div>
       <div id="aiSubtext" class="chat-subtext"></div>
     </div>
@@ -288,9 +313,9 @@
 
     <!-- 사용자 발화 인식 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">👤 내 목소리 인식 결과</div>
+      <div class="chat-label">👤 내 목소리 실시간 인식 결과</div>
       <div id="userText" class="chat-text" style="color: #94a3b8; font-style: italic;">
-        (말을 건네면 여기에 인식된 텍스트가 나옵니다)
+        (말을 건네면 여기에 실시간으로 내가 한 말이 나옵니다)
       </div>
     </div>
   </div>
@@ -314,24 +339,22 @@
     const voiceSelect = document.getElementById('voiceSelect');
     const rateInput = document.getElementById('rateInput');
     const rateVal = document.getElementById('rateVal');
+    const micAlert = document.getElementById('micAlert');
 
     let isCallActive = false;
     let recognition = null;
     let synth = window.speechSynthesis;
     let voices = [];
 
-    // 속도 변경 표시
     rateInput.addEventListener('input', () => {
       rateVal.innerText = `${rateInput.value}x`;
     });
 
-    // 브라우저 내 가장 선명한 영어 음성 자동 추출
     function populateVoices() {
       if (!synth) return;
       voices = synth.getVoices().filter(v => v.lang.includes('en'));
 
       voiceSelect.innerHTML = '';
-
       if (voices.length === 0) {
         const option = document.createElement('option');
         option.textContent = '기본 선명한 음성 (Default Voice)';
@@ -339,10 +362,7 @@
         return;
       }
 
-      // 선호하는 명확한 고급 원어민 음성 목록
       const preferredNames = ['Google US English', 'Samantha', 'Karen', 'Victoria', 'Jenny', 'Aria', 'Alex'];
-
-      // 우선순위 정렬
       voices.sort((a, b) => {
         const aPref = preferredNames.some(p => a.name.includes(p));
         const bPref = preferredNames.some(p => b.name.includes(p));
@@ -365,7 +385,6 @@
       speechSynthesis.onvoiceschanged = populateVoices;
     }
 
-    // 회화 시나리오 문장
     const CONVERSATIONS = [
       {
         prompt: "Hello! Welcome to our coffee shop. What can I get started for you today?",
@@ -389,46 +408,70 @@
 
     let currentConvIndex = 0;
 
-    // 음성 인식 설정
-    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.continuous = false;
-      recognition.interimResults = true;
-
-      recognition.onstart = () => {
-        setStatus('listening', '🎙️ 내 목소리 듣는 중...');
-        visualizer.classList.add('active');
-      };
-
-      recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+    // 음성 인식 초기화 및 권한 허용 요청
+    async function initSpeechRecognition() {
+      // 1. 먼저 마이크 미디어 권한을 명시적으로 요청
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          // 권한 확보 완료 후 트랙 종료
+          stream.getTracks().forEach(track => track.stop());
+          micAlert.style.display = 'none';
         }
-        userText.style.color = '#f8fafc';
-        userText.style.fontStyle = 'normal';
-        userText.innerText = `"${transcript}"`;
+      } catch (err) {
+        console.warn('Microphone permission error:', err);
+        setStatus('error', '⚠️ 마이크 권한이 차단되었습니다! 주소창 옆 🔒 마이크 허용을 눌러주세요.');
+        userText.innerHTML = '<b style="color:#ef4444;">⚠️ 마이크 권한 필요:</b> 브라우저 주소창 왼쪽의 🔒 자물쇠 아이콘을 눌러 [마이크 허용]으로 설정해 주세요!';
+      }
 
-        if (event.results[0].isFinal) {
-          handleUserSpeechFinished(transcript);
-        }
-      };
+      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = true;
 
-      recognition.onerror = (err) => {
-        console.warn('Speech recognition error:', err);
-        if (isCallActive) {
-          setTimeout(() => startListening(), 1000);
-        }
-      };
+        recognition.onstart = () => {
+          setStatus('listening', '🎙️ 내 목소리 듣는 중... (말해보세요!)');
+          visualizer.classList.add('active');
+        };
 
-      recognition.onend = () => {
-        visualizer.classList.remove('active');
-      };
+        recognition.onresult = (event) => {
+          let transcript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          userText.style.color = '#f8fafc';
+          userText.style.fontStyle = 'normal';
+          userText.innerText = `"${transcript}"`;
+
+          if (event.results[0].isFinal) {
+            handleUserSpeechFinished(transcript);
+          }
+        };
+
+        recognition.onerror = (err) => {
+          console.warn('Speech recognition error:', err.error);
+          if (err.error === 'not-allowed' || err.error === 'service-not-allowed') {
+            setStatus('error', '⚠️ 마이크 거부됨 (주소창 🔒 클릭 후 허용 필요)');
+            userText.innerText = '⚠️ 마이크 권한이 거부되었습니다. 주소창 자물쇠 버튼을 눌러 마이크를 허용해 주세요.';
+          } else if (isCallActive) {
+            setTimeout(() => startListening(), 1000);
+          }
+        };
+
+        recognition.onend = () => {
+          visualizer.classList.remove('active');
+        };
+      }
     }
 
-    callBtn.addEventListener('click', () => {
+    // 통화 버튼 누를 때 초기화 및 통화 실행
+    callBtn.addEventListener('click', async () => {
+      if (!recognition) {
+        await initSpeechRecognition();
+      }
+
       if (!isCallActive) {
         startCall();
       } else {
@@ -471,7 +514,7 @@
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = parseFloat(rateInput.value) || 0.95;
-        utterance.pitch = 1.0; // 또렷하고 깨끗한 톤
+        utterance.pitch = 1.0;
 
         const selectedOption = voiceSelect.selectedOptions[0];
         if (selectedOption) {
@@ -500,7 +543,7 @@
       try {
         recognition.start();
       } catch (e) {
-        console.log('Recognition already running');
+        console.log('Recognition start error:', e);
       }
     }
 
@@ -526,6 +569,7 @@
       statusBadge.className = 'status-badge';
       if (type === 'active') statusBadge.classList.add('active');
       if (type === 'listening') statusBadge.classList.add('listening');
+      if (type === 'error') statusBadge.classList.add('error');
       statusBadge.innerHTML = labelText;
     }
   </script>
