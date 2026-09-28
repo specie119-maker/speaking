@@ -40,7 +40,7 @@
 
     header {
       text-align: center;
-      margin-top: 12px;
+      margin-top: 8px;
     }
 
     header h1 {
@@ -53,14 +53,13 @@
     }
 
     header p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-sub);
     }
 
-    /* Main Conversation Card */
     .card-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       background: var(--glass-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -71,7 +70,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin: 20px 0;
+      margin: 16px 0;
     }
 
     .status-badge {
@@ -107,6 +106,45 @@
       50% { opacity: 0.6; }
     }
 
+    /* Voice Control Box */
+    .voice-control-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .control-row label {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    select, input[type="range"] {
+      background: rgba(15, 23, 42, 0.8);
+      color: #f8fafc;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    select {
+      flex: 1;
+      max-width: 240px;
+    }
+
     .chat-bubble {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -136,9 +174,9 @@
       margin-top: 6px;
     }
 
-    /* Wave Animation Visualizer */
+    /* Wave Animation */
     .visualizer-container {
-      height: 60px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -147,7 +185,7 @@
 
     .wave-bar {
       width: 6px;
-      height: 12px;
+      height: 10px;
       background: linear-gradient(180deg, #c084fc, #ec4899);
       border-radius: 4px;
       transition: height 0.15s ease;
@@ -164,14 +202,13 @@
     .visualizer-container.active .wave-bar:nth-child(5) { animation-delay: 0.15s; }
 
     @keyframes wave {
-      0%, 100% { height: 12px; }
-      50% { height: 48px; }
+      0%, 100% { height: 10px; }
+      50% { height: 40px; }
     }
 
-    /* Action Call Button */
     .btn-call {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       padding: 18px;
       border: none;
       border-radius: 20px;
@@ -193,10 +230,6 @@
       box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6);
     }
 
-    .btn-call:active {
-      transform: translateY(1px);
-    }
-
     .btn-call.ending {
       background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
       box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
@@ -206,15 +239,15 @@
       text-align: center;
       font-size: 0.8rem;
       color: var(--text-sub);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🎧 AI 실시간 영어 회화 통화</h1>
-    <p>버튼 누를 필요 없이 진짜 전화처럼 주고받는 회화 튜터</p>
+    <h1>🎧 선명한 AI 영어 회화 통화</h1>
+    <p>맑고 또렷한 고품질 선명 음성 튜터</p>
   </header>
 
   <div class="card-container">
@@ -222,9 +255,24 @@
       <span class="status-dot">🔴</span> 통화 대기 중
     </div>
 
+    <!-- 음성 및 속도 설정 박스 -->
+    <div class="voice-control-box">
+      <div class="control-row">
+        <label for="voiceSelect">🔊 원어민 목소리:</label>
+        <select id="voiceSelect">
+          <option value="">고음질 선명 음성 로딩 중...</option>
+        </select>
+      </div>
+      <div class="control-row">
+        <label for="rateInput">⚡ 말하기 속도:</label>
+        <input type="range" id="rateInput" min="0.7" max="1.1" step="0.05" value="0.95">
+        <span id="rateVal" style="font-size:0.8rem; color:#c084fc;">0.95x</span>
+      </div>
+    </div>
+
     <!-- AI 발화 영역 -->
     <div class="chat-bubble">
-      <div class="chat-label">🤖 AI Tutor (원어민)</div>
+      <div class="chat-label">🤖 AI Tutor (또렷한 원어민)</div>
       <div id="aiText" class="chat-text">"통화 시작 버튼을 누르면 인사를 건네드릴게요!"</div>
       <div id="aiSubtext" class="chat-subtext"></div>
     </div>
@@ -263,12 +311,61 @@
     const aiSubtext = document.getElementById('aiSubtext');
     const userText = document.getElementById('userText');
     const visualizer = document.getElementById('visualizer');
+    const voiceSelect = document.getElementById('voiceSelect');
+    const rateInput = document.getElementById('rateInput');
+    const rateVal = document.getElementById('rateVal');
 
     let isCallActive = false;
     let recognition = null;
     let synth = window.speechSynthesis;
+    let voices = [];
 
-    // 회화 시나리오 문장 데이터베이스
+    // 속도 변경 표시
+    rateInput.addEventListener('input', () => {
+      rateVal.innerText = `${rateInput.value}x`;
+    });
+
+    // 브라우저 내 가장 선명한 영어 음성 자동 추출
+    function populateVoices() {
+      if (!synth) return;
+      voices = synth.getVoices().filter(v => v.lang.includes('en'));
+
+      voiceSelect.innerHTML = '';
+
+      if (voices.length === 0) {
+        const option = document.createElement('option');
+        option.textContent = '기본 선명한 음성 (Default Voice)';
+        voiceSelect.appendChild(option);
+        return;
+      }
+
+      // 선호하는 명확한 고급 원어민 음성 목록
+      const preferredNames = ['Google US English', 'Samantha', 'Karen', 'Victoria', 'Jenny', 'Aria', 'Alex'];
+
+      // 우선순위 정렬
+      voices.sort((a, b) => {
+        const aPref = preferredNames.some(p => a.name.includes(p));
+        const bPref = preferredNames.some(p => b.name.includes(p));
+        if (aPref && !bPref) return -1;
+        if (!aPref && bPref) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      voices.forEach((voice, i) => {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.setAttribute('data-name', voice.name);
+        if (i === 0) option.selected = true;
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    populateVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    // 회화 시나리오 문장
     const CONVERSATIONS = [
       {
         prompt: "Hello! Welcome to our coffee shop. What can I get started for you today?",
@@ -292,7 +389,7 @@
 
     let currentConvIndex = 0;
 
-    // 음성 인식 초기화
+    // 음성 인식 설정
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
@@ -329,11 +426,8 @@
       recognition.onend = () => {
         visualizer.classList.remove('active');
       };
-    } else {
-      alert('이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저 사용을 권장합니다.');
     }
 
-    // 통화 시작 / 종료 버튼 이벤트
     callBtn.addEventListener('click', () => {
       if (!isCallActive) {
         startCall();
@@ -376,7 +470,17 @@
         synth.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
-        utterance.rate = 0.9;
+        utterance.rate = parseFloat(rateInput.value) || 0.95;
+        utterance.pitch = 1.0; // 또렷하고 깨끗한 톤
+
+        const selectedOption = voiceSelect.selectedOptions[0];
+        if (selectedOption) {
+          const selectedName = selectedOption.getAttribute('data-name');
+          const chosenVoice = voices.find(v => v.name === selectedName);
+          if (chosenVoice) {
+            utterance.voice = chosenVoice;
+          }
+        }
 
         utterance.onend = () => {
           if (isCallActive && onEndedCallback) {
@@ -396,7 +500,7 @@
       try {
         recognition.start();
       } catch (e) {
-        console.log('Recognition already started:', e);
+        console.log('Recognition already running');
       }
     }
 
@@ -413,7 +517,6 @@
 
       setTimeout(() => {
         speakAITutor(selectedReply.reply, selectedReply.kr, () => {
-          // 연속 통화 루프
           setTimeout(() => startListening(), 800);
         });
       }, 500);

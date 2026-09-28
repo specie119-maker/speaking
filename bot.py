@@ -25,7 +25,7 @@ load_dotenv()
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 NOTIFY_HOUR = int(os.getenv("NOTIFY_HOUR", 21))
 NOTIFY_MINUTE = int(os.getenv("NOTIFY_MINUTE", 0))
-VOICE_NAME = os.getenv("VOICE_NAME", "en-US-AvaNeural")
+VOICE_NAME = os.getenv("VOICE_NAME", "en-US-AriaNeural")
 
 SUBSCRIBERS_FILE = "subscribers.json"
 EXPRESSIONS_FILE = "expressions.json"
